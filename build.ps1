@@ -12,6 +12,9 @@ param(
     [ValidateSet("quiet", "minimal", "normal", "diagnostic")]
     [string]$Verbosity = "normal",
 
+    [Parameter(Position = 3)]
+    [string]$VsDevCmdPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017",
+
     [switch]$RunTests
 )
 
@@ -56,7 +59,7 @@ function Set-DevEnvironment {
         return
     }
 
-    $microsoftVisualStudio = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017"
+    $microsoftVisualStudio = $VsDevCmdPath
 
     if (Test-Path $microsoftVisualStudio) {
         $installations = Get-ChildItem $microsoftVisualStudio | ? { $_.PsIsContainer }
@@ -70,7 +73,7 @@ function Set-DevEnvironment {
             }
         }
     } else {
-        Write-Error "Could not locate: $microsoftVisualStudio. Pass path to $VsDevCmdBat using parameter -VsDevCmdPath."
+        Write-Error "Could not locate: $microsoftVisualStudio. Pass path to Visual Studio using parameter -VsDevCmdPath."
     }
 
     if ([string]::IsNullOrEmpty($commonToolsPath)) {
